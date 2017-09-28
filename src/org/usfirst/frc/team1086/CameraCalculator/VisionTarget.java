@@ -27,6 +27,7 @@ public abstract class VisionTarget {
     /**
      * This method should validate the sightings. 
      * This abstract method should take the list of possible sightings and determine whether or not they are a valid sighting of the vision target
+     * For targets that have multiple parts, this should combine the separate parts in to one sighting
      * @param polys the sightings to evaluate.
      * @return the valid sightings
      */
@@ -34,12 +35,10 @@ public abstract class VisionTarget {
     
     /**
      * This method should determine whether or not the estimation provided by the camera calculator is good.
-     * @param distance the estimated distance
-     * @param angle the estimated angle
-     * @param sightings the valid sightings
+     * @param s the sighting to validate
      * @return whether or not the estimation given is a good/usable estimation
      */
-    public abstract boolean estimationIsGood(double distance, double angle, ArrayList<Sighting> sightings);
+    public abstract boolean estimationIsGood(Sighting s);
     
     /**
      * Creates a camera calculator to be used by a given camera for this vision target

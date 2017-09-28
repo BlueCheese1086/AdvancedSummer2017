@@ -1,14 +1,14 @@
 package org.usfirst.frc.team1086.CameraCalculator;
 
 import java.util.ArrayList;
+import java.util.OptionalDouble;
 
 public class CameraCalculator {
-    ArrayList<Sighting> visionObjects = new ArrayList();
-    public double distance, angle;
-    public double rawV, rawX;
-    public double targetRotation;
+    ArrayList<Sighting> visionObjects = new ArrayList<>();
+    ArrayList<Sighting> validSightings = new ArrayList<>();
     Camera camera;
     VisionTarget visionTarget;
+    
     /**
      * Creates the camera calculator
      * @param c the camera the calculator uses to get its image data
@@ -22,35 +22,31 @@ public class CameraCalculator {
     /**
      * Updates the data from the camera
      * @param polys the data from the camera
-     */                                                                                 
+     */
     void updateObjects(ArrayList<Sighting> polys){
         visionObjects.clear();
         visionObjects.addAll(polys);
         visionObjects = visionTarget.validateSightings(visionObjects);
-        for(Sighting s : visionObjects){
-            s.relativeAspectRatio = s.aspectRatio / visionTarget.aspectRatio;
-            targetRotation = 0;
-            if(Math.abs(s.relativeAspectRatio) <= 1)
-            	targetRotation = Math.acos(s.relativeAspectRatio);
-        }
         calculateDistance();
         calculateAngle();
+        calculateRotation();
+        eliminateBadTargets();
+        validSightings = new ArrayList<>(visionObjects);
     }
     
     /**
      * Calculates the distance to the specified vision target
      */
     public void calculateDistance(){
-        if(visionObjects.isEmpty()){
-            distance = -1;
-        } else {
-            double midY = visionObjects.stream().mapToDouble(p -> p.centerY / visionObjects.size()).sum();
-            double angleFromCameraToTarget = rawV = getYAngle(midY);
+        for(Sighting p : visionObjects){
+            double midY = p.centerY;
+            double angleFromCameraToTarget = getYAngle(midY);
+            p.rawV = OptionalDouble.of(angleFromCameraToTarget);
             double verticalAngle = angleFromCameraToTarget + camera.vAngle;
             double changeInY = visionTarget.height - camera.verticalOffset;
             double distanceToTarget = changeInY / Math.sin(verticalAngle);
             double horizontalDistance = distanceToTarget * Math.cos(verticalAngle);
-            distance = horizontalDistance;
+            p.distance = OptionalDouble.of(horizontalDistance);
         }
     }
     
@@ -58,18 +54,26 @@ public class CameraCalculator {
      * Calculates the angle to the specified vision target
      */
     public void calculateAngle(){
-        if(visionObjects.isEmpty()){
-            angle = Math.PI;
-        } else {
-            double midX = visionObjects.stream().mapToDouble(p -> p.centerX / visionObjects.size()).sum();
-            rawX = getXAngle(midX);
+        for(Sighting p : visionObjects){
+            double midX = p.centerX;
+            p.rawH = OptionalDouble.of(getXAngle(midX));
             double horizontalAngle = Math.PI / 2 - getXAngle(midX);
-            double f = Math.sqrt(
-                            distance * distance + Math.pow(camera.horizontalOffset, 2)
-                                            - 2 * distance * camera.horizontalOffset * Math.cos(horizontalAngle));
+            double distance = p.distance.getAsDouble();
+            double f = Math.sqrt(distance * distance + Math.pow(camera.horizontalOffset, 2) - 2 * distance * camera.horizontalOffset * Math.cos(horizontalAngle));
             double c = Math.asin(camera.horizontalOffset * Math.sin(horizontalAngle) / f);
             double b = Math.PI - horizontalAngle - c;
-            angle = (Math.PI / 2 - b) - camera.hAngle;
+            p.angle = OptionalDouble.of((Math.PI / 2 - b) - camera.hAngle);
+        }
+    }
+    
+    /**
+     * Calculates the horizontal rotation of the vision target relative to the camera
+     */
+    public void calculateRotation(){
+        for(Sighting s : visionObjects){
+            s.relativeAspectRatio = s.aspectRatio / visionTarget.aspectRatio;
+            if(Math.abs(s.relativeAspectRatio) < 1)
+            s.rotation = OptionalDouble.of(Math.acos(s.relativeAspectRatio));
         }
     }
     
@@ -85,6 +89,13 @@ public class CameraCalculator {
     }
     
     /**
+     * Eliminates sightings that have invalid distances, angles, or are considered incorrect for some reason.
+     */
+    public void eliminateBadTargets(){
+        visionObjects.removeIf(s -> !visionTarget.estimationIsGood(s));
+    }
+    
+    /**
      * Finds the vertical angle to a specific pixel on the camera
      * @param y the pixel
      * @return the angle
@@ -96,26 +107,18 @@ public class CameraCalculator {
     }
     
     /**
-     * Returns the most recent distance calculated to the target
+     * Returns the most recent target sightings
      * @return the most recent distance calculated to the specified target or -1 if the target is not found.
      */
-    public double getLastDistance(){
-        return visionTarget.estimationIsGood(distance, angle, visionObjects) ? distance : -1;
-    }
-    
-    /**
-     * Returns the most recent horizontal angle calculated to the target
-     * @return the most recent horizontal angle calculated to the specified target or 180 if the target is not found.
-     */
-    public double getLastAngle(){
-        return visionTarget.estimationIsGood(distance, angle, visionObjects) ? angle : 180;
+    public ArrayList<Sighting> getSightings(){
+        return new ArrayList<>(validSightings);
     }
     
     /**
      * Tells whether or not the specified vision target can be seen
      * @return whether or not the specified vision target can be seen
      */
-    public boolean seesTarget(){
-        return visionTarget.estimationIsGood(distance, angle, visionObjects) && distance != -1;
+    public int sightingCount(){
+        return validSightings.size();
     }
 }

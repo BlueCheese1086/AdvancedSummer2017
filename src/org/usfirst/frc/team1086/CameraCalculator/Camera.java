@@ -1,23 +1,31 @@
 package org.usfirst.frc.team1086.CameraCalculator;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.VideoSource;
-import edu.wpi.first.wpilibj.CameraServer;
 import static java.lang.Thread.interrupted;
 import static java.lang.Thread.sleep;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
+import edu.wpi.cscore.AxisCamera;
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.VideoCamera;
+import edu.wpi.first.wpilibj.CameraServer;
+
 public class Camera {
+	static {
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+	}
     public double vFOV;
     public double hFOV;
     public double xPixels;
     public double yPixels;
     public double horizontalOffset, verticalOffset, depthOffset;
     public double hAngle, vAngle;
-    public ArrayList<Pipeline> pipes = new ArrayList();
-    public HashMap<VisionTarget, CameraCalculator> calculators = new HashMap();
+    ArrayList<Pipeline> pipes = new ArrayList();
+    HashMap<VisionTarget, CameraCalculator> calculators = new HashMap();
     
     /**
      * Instantiates the camera object
@@ -44,36 +52,23 @@ public class Camera {
     }
     
     /**
-     * Tells whether the camera can see a specified vision target
+     * Tells the number of sightings of a target the camera has identified
      * @param vt the vision target to check
-     * @return whether or not the camera can see it
+     * @return the number of sightings identified
      */
-    public boolean seesTarget(VisionTarget vt){
+    public int numberOfSightings(VisionTarget vt){
         if(!calculators.containsKey(vt))
-            return false;
-        return calculators.get(vt).seesTarget();
+            return 0;
+        return calculators.get(vt).sightingCount();
     }
     
     /**
-     * Tells the approximate distance to the specified vision target
+     * Returns a list of all validated target sightings
      * @param vt the specified vision target
-     * @return the distance
+     * @return the list of sightings
      */
-    public double getDistance(VisionTarget vt){
-        if(!seesTarget(vt))
-            return -1;
-        else return calculators.get(vt).getLastDistance();
-    }
-    
-    /**
-     * Tells the approximate horizontal angle to the specified vision target
-     * @param vt the specified vision target
-     * @return the angle
-     */
-    public double getAngle(VisionTarget vt){
-        if(!seesTarget(vt))
-            return -1;
-        else return calculators.get(vt).getLastAngle();
+    public ArrayList<Sighting> getSightings(VisionTarget vt){
+        return calculators.get(vt).getSightings();
     }
     
     /**
@@ -96,10 +91,15 @@ public class Camera {
      * Configures the horizontal and vertical angles of the camera
      * @param target the target used to configure the robot. The center of the robot must be perfectly aligned with the given target
      * @param distance the distance between the robot and the target
+     * @throws java.lang.Exception To configure, the camera must only be able to see one valid sighting.
      */
-    public void configure(VisionTarget target, double distance){
-        hAngle = CameraConfig.getXAngle(calculators.get(target).rawX, distance, horizontalOffset);
-    	vAngle = CameraConfig.getYAngle(calculators.get(target).rawV, target.height - verticalOffset, distance);
+    public void configure(VisionTarget target, double distance) throws Exception {
+        if(calculators.get(target).sightingCount() != 1)
+            throw new Exception("Camera must only see one target to perform configuration!");
+        if(!calculators.get(target).getSightings().get(0).rawH.isPresent() || !calculators.get(target).getSightings().get(0).rawV.isPresent())
+            throw new Exception("Raw vertical angle or raw horizontal angle is not available!");
+        hAngle = CameraConfig.getXAngle(calculators.get(target).getSightings().get(0).rawH.getAsDouble(), distance, horizontalOffset);
+    	vAngle = CameraConfig.getYAngle(calculators.get(target).getSightings().get(0).rawV.getAsDouble(), target.height - verticalOffset, distance);
     }
     
     /**
@@ -107,20 +107,24 @@ public class Camera {
      * @param source the source of the camera
      * @param name the name of the camera
      */
-    public void initializeCamera(VideoSource source, String name){
-        CvSink sink = new CvSink(name);
-        sink.setSource(source);
-        sink.setEnabled(true);
+    public void initializeCamera(VideoCamera source, String name){
+    	AxisCamera cam = CameraServer.getInstance().addAxisCamera("10.10.86.22");
+    	cam.setResolution(320, 240);
         new Thread(() -> {
             try {
-                CameraServer.getInstance().startAutomaticCapture(source);
+            	CameraServer.getInstance().startAutomaticCapture(cam);
+                CvSink sink = CameraServer.getInstance().getVideo();
+                sink.setSource(cam);
                 Mat sourceMat = new Mat();
                 while (!interrupted()) {
-                    sink.grabFrame(sourceMat);
-                    process(sourceMat);
+                	if(sink.grabFrame(sourceMat) != 0)
+                		process(sourceMat);
                     sleep(50);
+                    System.gc();
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            	e.printStackTrace();
+            }
         }).start();
     }
     
@@ -135,5 +139,13 @@ public class Camera {
                 calculators.get(target).updateObjects((ArrayList<Sighting>) sightings.clone());
             });
         }
+    }
+}
+class CameraConfig {
+    public static double getXAngle(double rawA, double dis, double cameraOffset){
+    	return Math.acos(cameraOffset / dis) - rawA;
+    }
+    public static double getYAngle(double rawA, double dHeight, double dis){
+        return Math.atan2(dHeight, dis) - rawA;
     }
 }
