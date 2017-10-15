@@ -12,10 +12,19 @@ public class Drivetrain {
         frontLeft.setInverted(true);
         rearLeft.setInverted(true);
     }
+    public void oct(double leftY, double leftX, double rightX){
+        //if ()
+    }
     public void mecanum(double leftY, double leftX, double rightX){
         frontLeft.set(-leftY - rightX - leftX);
         frontRight.set(-leftY + rightX + leftX);
         rearLeft.set(leftY - rightX + leftX);
         rearRight.set(leftY + rightX - leftX);
+    }
+    public void colson(double leftY, double rightX){
+        frontLeft.set(-leftY - rightX);
+        frontRight.set(-leftY + rightX);
+        rearLeft.set(leftY - rightX);
+        rearRight.set(leftY + rightX);
     }
 }

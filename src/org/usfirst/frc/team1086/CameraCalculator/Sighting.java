@@ -18,6 +18,7 @@ public class Sighting {
     public double relativeAspectRatio;
     public int pieces = 1;
     public OptionalDouble angle, distance, rotation, rawV, rawH = rawV = rotation = distance = angle = OptionalDouble.empty();
+    public OptionalDouble adjustedHAngle, adjustedYAngle = OptionalDouble.empty();
     List<Point> points;
     
     /**
@@ -84,6 +85,9 @@ public class Sighting {
      */
     @Override public String toString(){
     	return "(" + x + ", " + y + ") to (" + (x + width) + ", " + (y + height) + ")";
+    }
+    public String getValues(){
+    	return "x angle: " + adjustedHAngle.getAsDouble() + ", y angle: " + adjustedYAngle.getAsDouble();
     }
 }
 class Line {

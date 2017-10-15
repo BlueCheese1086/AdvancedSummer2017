@@ -14,9 +14,9 @@ public class RetroReflectivePipeline implements Pipeline {
     @Override public ArrayList<Sighting> process(Mat source){
         Mat output = new Mat();
         Mat hsvThresholdInput = source;
-        double[] hsvThresholdHue = {40, 105};
-        double[] hsvThresholdSaturation = {230, 255};
-        double[] hsvThresholdValue = {30, 248};
+        double[] hsvThresholdHue = {63, 105};
+        double[] hsvThresholdSaturation = {213, 255};
+        double[] hsvThresholdValue = {50, 248};
         hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, output);
         hsvThresholdOutput = output.clone();
         Mat findContoursInput = hsvThresholdOutput;

@@ -40,10 +40,10 @@ public class Robot extends IterativeRobot {
     @Override public void autonomousPeriodic(){}
     @Override public void teleopPeriodic(){
         if(leftDrive.getRawButton(1)){
-            drive.mecanum(leftDrive.getY(), leftDrive.getX(), rightDrive.getX());
-        } else drive.mecanum(0, 0, 0);
+            drive.oct(leftDrive.getY(), leftDrive.getX(), rightDrive.getX());
+        } else drive.oct(0, 0, 0);
         if(rightDrive.getRawButton(1)){
-            drive.mecanum(cameraDrive.get(), cameraStrafe.get(), cameraTurn.get());
+            drive.oct(cameraDrive.get(), cameraStrafe.get(), cameraTurn.get());
         } else if(leftDrive.getRawButton(2)) {
         	try {
         	camera.getCamera().configure(camera.gear, 52);

@@ -17,15 +17,15 @@ public class Driver {
     Pipeline primary = new RetroReflectivePipeline();
     PIDController turnController, driveController, strafeController;
     Camera gearCamera;
-    public static final double GEAR_CAMERA_HFOV = 47 * Math.PI /  180.0;
-    public static final double GEAR_CAMERA_VFOV = 47 * Math.PI /  180.0;
+    public static final double GEAR_CAMERA_HFOV = 51 * Math.PI /  180.0;
+    public static final double GEAR_CAMERA_VFOV = 67 * Math.PI /  180.0;
     public static final double GEAR_CAMERA_HEIGHT = 240;
     public static final double GEAR_CAMERA_WIDTH = 320;
     public static final double GEAR_CAMERA_HOFFSET = 0;
     public static final double GEAR_CAMERA_VOFFSET = 7.75;
     public static final double GEAR_CAMERA_DOFFSET = 0;
     public static double GEAR_CAMERA_XANGLE = 1.47887575993748 * Math.PI / 180;
-    public static double GEAR_CAMERA_YANGLE = 7.15837384910151 * Math.PI / 180;
+    public static double GEAR_CAMERA_YANGLE = 10.15837384910151 * Math.PI / 180;
     public static final double turnP = 0;
     public static final double turnI = 0;
     public static final double turnD = 0;

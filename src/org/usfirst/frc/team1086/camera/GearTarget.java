@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class GearTarget extends VisionTarget {
-    int pixelDistanceThreshold = 30;
+    int pixelDistanceThreshold = 320;
     public GearTarget(){
         super("Gear Lift");
-        this.height = 16.3;
+        this.height = 15.75;
     }
     @Override public ArrayList<Sighting> validateSightings(ArrayList<Sighting> polys){
         DisjointUnionSets sets = new DisjointUnionSets(polys.size());

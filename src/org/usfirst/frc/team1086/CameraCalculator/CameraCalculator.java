@@ -31,6 +31,10 @@ public class CameraCalculator {
         calculateAngle();
         calculateRotation();
         eliminateBadTargets();
+        System.out.println("New calculation!");
+        for(Sighting s : visionObjects){
+        	System.out.println(s.getValues());
+        }
         validSightings = new ArrayList<>(visionObjects);
     }
     
@@ -39,9 +43,10 @@ public class CameraCalculator {
      */
     public void calculateDistance(){
         for(Sighting p : visionObjects){
-            double midY = p.centerY;
+            double midY = p.y;
             double angleFromCameraToTarget = getYAngle(midY);
             p.rawV = OptionalDouble.of(angleFromCameraToTarget);
+            p.adjustedYAngle = OptionalDouble.of(angleFromCameraToTarget + camera.vAngle);
             double verticalAngle = angleFromCameraToTarget + camera.vAngle;
             double changeInY = visionTarget.height - camera.verticalOffset;
             double distanceToTarget = changeInY / Math.sin(verticalAngle);
@@ -57,12 +62,13 @@ public class CameraCalculator {
         for(Sighting p : visionObjects){
             double midX = p.centerX;
             p.rawH = OptionalDouble.of(getXAngle(midX));
-            double horizontalAngle = Math.PI / 2 - getXAngle(midX);
+            p.adjustedHAngle = OptionalDouble.of(getXAngle(midX) + camera.hAngle);
+            double horizontalAngle = Math.PI / 2 - getXAngle(midX) - camera.hAngle;
             double distance = p.distance.getAsDouble();
             double f = Math.sqrt(distance * distance + Math.pow(camera.horizontalOffset, 2) - 2 * distance * camera.horizontalOffset * Math.cos(horizontalAngle));
             double c = Math.asin(camera.horizontalOffset * Math.sin(horizontalAngle) / f);
             double b = Math.PI - horizontalAngle - c;
-            p.angle = OptionalDouble.of((Math.PI / 2 - b) - camera.hAngle);
+            p.angle = OptionalDouble.of((Math.PI / 2 - b));
         }
     }
     
@@ -71,15 +77,15 @@ public class CameraCalculator {
      */
     public void calculateRotation(){
         for(Sighting s : visionObjects){
-        	/*
-            s.relativeAspectRatio = s.aspectRatio / visionTarget.aspectRatio;
+        	/* s.relativeAspectRatio = s.aspectRatio / visionTarget.aspectRatio;
             if(Math.abs(s.relativeAspectRatio) < 1)
             s.rotation = OptionalDouble.of(Math.acos(s.relativeAspectRatio)); */
         	double cx = (camera.xPixels / 2) - 0.5;
         	double dx = s.centerX - cx;
         	double HF = (camera.xPixels / 2) / Math.tan(camera.hFOV / 2);
         	double horizontalDis = -dx * s.distance.getAsDouble() / Math.sqrt(dx * dx + HF * HF);
-        	System.out.println(horizontalDis);
+        	s.rotation = OptionalDouble.of(horizontalDis);
+        	//System.out.println(horizontalDis);
         }
     }
     
