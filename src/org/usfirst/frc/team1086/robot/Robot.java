@@ -6,7 +6,10 @@ import java.util.Arrays;
 import org.usfirst.frc.team1086.CameraCalculator.Sighting;
 import org.usfirst.frc.team1086.autonomous.AutonomousManager;
 import org.usfirst.frc.team1086.camera.Driver;
+import org.usfirst.frc.team1086.subsystems.Climber;
+import org.usfirst.frc.team1086.subsystems.GearHolder;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
@@ -16,8 +19,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
     Drivetrain drive;
     InputManager im;
+    GearHolder evictor;
+    Climber climber;
+    Compressor compressor;
     Driver camera;
-    Joystick leftDrive, rightDrive;
     PIDController cameraTurn, cameraStrafe, cameraDrive;
     SendableChooser<AutonomousManager> chooser;
     AutonomousManager middleGear;
@@ -25,6 +30,10 @@ public class Robot extends IterativeRobot {
     boolean cameraOn = false; //Turn this to true/remove it when camera is on robot.
     @Override public void robotInit(){
         drive = new Drivetrain();
+        evictor = new GearHolder();
+        climber = new Climber();
+        compressor = new Compressor(RobotMap.COMPRESSOR);
+        compressor.setClosedLoopControl(true);
         
         if(cameraOn){
 	        camera = new Driver();
@@ -44,6 +53,16 @@ public class Robot extends IterativeRobot {
     @Override public void autonomousPeriodic(){}
     @Override public void teleopPeriodic(){
         drive.drive(im.getDrive(), im.getStrafe(), im.getTurn(), im.getShift());
+        
+        if(im.getClimb())
+            climber.climb();
+        else 
+            climber.stop();
+        
+        if(im.getEvict())
+            evictor.evict();
+        else 
+            evictor.hold();
         
         if(cameraOn){
         	if(im.getConfigCamera()) {
