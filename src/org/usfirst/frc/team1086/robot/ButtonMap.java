@@ -3,6 +3,7 @@ package org.usfirst.frc.team1086.robot;
 public class ButtonMap {
     //LEFT JOYSTICK
     public static final int SAFETY_DRIVE = 1;
+    public static final int CONFIG_CAMERA = 2;
     public static final int TURN_LEFT = 4;
     public static final int TURN_RIGHT = 5;
     

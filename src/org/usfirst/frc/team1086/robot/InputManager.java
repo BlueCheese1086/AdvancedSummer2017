@@ -36,4 +36,7 @@ public class InputManager {
 	public boolean getGearDrive(){
 		return rightStick.getRawButton(ButtonMap.GEAR_DRIVE);
 	}
+	public boolean getConfigCamera(){
+		return leftStick.getRawButton(ButtonMap.CONFIG_CAMERA);
+	}
 }

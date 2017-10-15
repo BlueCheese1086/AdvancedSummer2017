@@ -14,7 +14,7 @@ public class Drive extends AutonomousSection {
 		this.strafe = strafe;
 	}
 	@Override public void update(){
-		drive.oct(forward, strafe, turn);
+		drive.drive(forward, strafe, turn, false);
 	}
 	@Override public void finish(){}
 }
