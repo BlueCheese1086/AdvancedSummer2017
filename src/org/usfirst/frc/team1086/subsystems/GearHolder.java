@@ -10,9 +10,9 @@ public class GearHolder {
 		evictor = new Solenoid(RobotMap.SPITTER);
 	}
 	public void evict(){
-		evictor.set(true);
+		evictor.set(false);
 	}
 	public void hold(){
-		evictor.set(false);
+		evictor.set(true);
 	}
 }

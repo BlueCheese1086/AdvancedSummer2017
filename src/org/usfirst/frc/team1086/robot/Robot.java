@@ -29,6 +29,7 @@ public class Robot extends IterativeRobot {
     
     boolean cameraOn = false; //Turn this to true/remove it when camera is on robot.
     @Override public void robotInit(){
+    	im = new InputManager();
         drive = new Drivetrain();
         evictor = new GearHolder();
         climber = new Climber();
@@ -52,6 +53,8 @@ public class Robot extends IterativeRobot {
     }
     @Override public void autonomousPeriodic(){}
     @Override public void teleopPeriodic(){
+    	System.out.println(drive);
+    	im.getDrive();
         drive.drive(im.getDrive(), im.getStrafe(), im.getTurn(), im.getShift());
         
         if(im.getClimb())

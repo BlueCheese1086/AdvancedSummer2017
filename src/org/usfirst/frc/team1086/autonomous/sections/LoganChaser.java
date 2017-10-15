@@ -24,9 +24,9 @@ public class LoganChaser extends AutonomousSection {
 	}
 	@Override public void update(){
 		if(driver.seesTarget())
-			drivetrain.oct(drive.get(), strafe.get(), turn.get());
+			drivetrain.drive(drive.get(), strafe.get(), turn.get(), true);
 		else
-			drivetrain.oct(0, 0, 0.6);
+			drivetrain.drive(0, 0, 0.6, true);
 	}
 	@Override public void finish(){
 		drive.disable();

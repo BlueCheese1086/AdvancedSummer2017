@@ -23,7 +23,7 @@ public class DriveDistance extends AutonomousSection {
 		driver.enable();
 	}
 	@Override public void update(){
-		drive.oct(driver.get(), 0, 0);
+		drive.drive(driver.get(), 0, 0, true);
 	}
 	@Override public void finish(){
 		driver.disable();

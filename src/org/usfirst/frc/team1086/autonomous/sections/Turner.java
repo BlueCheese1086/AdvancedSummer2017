@@ -23,7 +23,7 @@ public class Turner extends AutonomousSection {
 		turnPID.enable();
 	}
 	@Override public void update(){
-		drive.oct(0, 0, turnPID.get());
+		drive.drive(0, 0, turnPID.get(), true);
 	}
 	@Override public void finish(){
 		turnPID.disable();

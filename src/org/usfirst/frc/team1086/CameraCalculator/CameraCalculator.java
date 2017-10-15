@@ -80,7 +80,7 @@ public class CameraCalculator {
         	/* s.relativeAspectRatio = s.aspectRatio / visionTarget.aspectRatio;
             if(Math.abs(s.relativeAspectRatio) < 1)
             s.rotation = OptionalDouble.of(Math.acos(s.relativeAspectRatio)); */
-        	double cx = (camera.xPixels / 2) - 0.5;
+        	double cx = -(camera.xPixels / 2) - 0.5;
         	double dx = s.centerX - cx;
         	double HF = (camera.xPixels / 2) / Math.tan(camera.hFOV / 2);
         	double horizontalDis = -dx * s.distance.getAsDouble() / Math.sqrt(dx * dx + HF * HF);

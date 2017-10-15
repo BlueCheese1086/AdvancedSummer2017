@@ -24,7 +24,7 @@ public class Drivetrain {
         trigger = new Solenoid(RobotMap.TRIGGER);
     }
     public void drive(double leftY, double leftX, double rightX, boolean trigger){
-        this.trigger.set(trigger);
+        this.trigger.set(!trigger);
         if(!trigger){
             mecanum(leftY * Math.abs(leftY), leftX * Math.abs(leftX), rightX * Math.abs(rightX));
         } else {
