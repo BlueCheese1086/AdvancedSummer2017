@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.PIDController;
 public class DriveDistance extends AutonomousSection {
 	Drivetrain drive;
 	PIDController driver;
-	public DriveDistance(double distance, Drivetrain drive, EncoderManager man){
+	public DriveDistance(double distance, Drivetrain drive){
 		this.duration = -1;
 		this.drive = drive;
-		this.driver = man.getDrivePID(distance);
+		this.driver = drive.getDriveToDistanceController();
 	}
-	public DriveDistance(double distance, Drivetrain drive, EncoderManager man, long duration){
-		this(distance, drive, man);
+	public DriveDistance(double distance, Drivetrain drive, long duration){
+		this(distance, drive);
 		this.duration = duration;
 	}
 	@Override public void start(){

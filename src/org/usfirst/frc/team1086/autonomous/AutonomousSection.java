@@ -5,7 +5,7 @@ package org.usfirst.frc.team1086.autonomous;
  * @author Jack
  */
 public abstract class AutonomousSection {
-    long startTime;
+    protected long startTime;
     public long duration;
     boolean isStarted = false;
     

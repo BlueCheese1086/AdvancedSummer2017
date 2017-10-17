@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.PIDController;
 public class Turner extends AutonomousSection {
 	PIDController turnPID;
 	Drivetrain drive;
-	public Turner(PIDController turnPID, Drivetrain drive){
-		this.turnPID = turnPID;
+	public Turner(Drivetrain drive){
+		this.turnPID = drive.getTurnToAngleController();
 		this.drive = drive;
 		duration = -1;
 	}
-	public Turner(PIDController turnPID, Drivetrain drive, long duration){
-		this(turnPID, drive);
+	public Turner(Drivetrain drive, long duration){
+		this(drive);
 		this.duration = duration;
 	}
 	@Override public void start(){

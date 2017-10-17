@@ -2,12 +2,16 @@ package org.usfirst.frc.team1086.robot;
 
 import com.ctre.CANTalon;
 
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class Drivetrain {
 	CANTalon leftFrontMecanum, rightFrontMecanum, leftRearMecanum, rightRearMecanum;
     CANTalon leftFrontColson, rightFrontColson, leftRearColson, rightRearColson;
     Solenoid trigger;
+    EncoderManager em;
+    Gyro g;
+    PIDController turnToAngle, driveStraight, driveToDistance;
     public Drivetrain(){
         leftFrontMecanum = new CANTalon(RobotMap.LEFT_FRONT_MECANUM);
         leftRearMecanum = new CANTalon(RobotMap.LEFT_REAR_MECANUM);
@@ -51,5 +55,35 @@ public class Drivetrain {
         leftRearColson.set(leftY - rightX);
         rightRearMecanum.set(leftY + rightX);
         rightRearColson.set(leftY + rightX);
-    } 
+    }
+    public PIDController getTurnToAngleController(){
+    	PIDController controller = new PIDController(0, 0, 0, new PIDInput(() -> {
+    		return g.getAngle();
+    	}), o -> {});
+    	controller.setInputRange(-180, 180);
+    	controller.setOutputRange(-1, 1);
+    	controller.setContinuous(true);
+    	return controller;
+    }
+    public PIDController getDriveStraightController(){
+    	PIDController controller = new PIDController(0, 0, 0, new PIDInput(() -> {
+    		return g.getAngle();
+    	}), o -> {});
+    	controller.setInputRange(-180, 180);
+    	controller.setOutputRange(-1, 1);
+    	controller.setContinuous(true);
+    	return controller;
+    }
+    public PIDController getDriveToDistanceController(){
+    	PIDController controller = new PIDController(0, 0, 0, new PIDInput(() -> {
+    		return em.getDistance();
+    	}), o -> {});
+    	controller.setInputRange(-180, 180);
+    	controller.setOutputRange(-1, 1);
+    	controller.setContinuous(true);
+    	return controller;
+    }
+    public Gyro getGryo(){
+    	return g;
+    }
 }

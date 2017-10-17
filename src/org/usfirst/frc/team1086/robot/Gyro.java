@@ -8,4 +8,8 @@ public class Gyro {
 	{
 		
 	}
+	public double getAngle(){
+		return 0;
+	}
+	public void reset(){}
 }

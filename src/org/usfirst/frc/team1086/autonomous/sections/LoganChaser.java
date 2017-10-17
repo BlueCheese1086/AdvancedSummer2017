@@ -19,12 +19,15 @@ public class LoganChaser extends AutonomousSection {
 	}
 	@Override public void start(){
 		drive.enable();
+		drive.setSetpoint(0);
 		strafe.enable();
+		strafe.setSetpoint(0);
 		turn.enable();
+		turn.setSetpoint(0);
 	}
 	@Override public void update(){
 		if(driver.seesTarget())
-			drivetrain.drive(drive.get(), strafe.get(), turn.get(), true);
+			drivetrain.drive(drive.get(), 0, turn.get(), true);
 		else
 			drivetrain.drive(0, 0, 0.6, true);
 	}
