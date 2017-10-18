@@ -14,17 +14,18 @@ public class Gyro {
 	GyroType type = GyroType.GYRO;
 	static Gyro instance = null;
 	private Gyro() {
-            	try {
-                	navX = new AHRS(SerialPort.Port.kMXP);
-                	type = GyroType.NAVX;
-            	} catch(Exception e){
-            		gyro = new AnalogGyro(0);
-            	}
-		instance = this;
-        }
+    	try {
+        	navX = new AHRS(SerialPort.Port.kMXP);
+        	type = GyroType.NAVX;
+    	} catch(Exception e){
+    		gyro = new AnalogGyro(0);
+    	}
+    	instance = this;
+    }
 	public static Gyro getGyro(){
 		if(instance == null)
-		return new Gyro();
+			return new Gyro();
+		return instance;
 	}
 	public double getAngle() {
 		if(type == GyroType.NAVX) {
