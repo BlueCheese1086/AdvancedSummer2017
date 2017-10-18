@@ -47,7 +47,7 @@ public class Robot extends IterativeRobot {
 	        cameraStrafe.enable();
 	        cameraDrive.enable();
         }
-        defineAutonomousRoutines();
+        //defineAutonomousRoutines();
     }
     public void defineAutonomousRoutines(){
     	middleGear = new AutonomousManager();
@@ -81,6 +81,19 @@ public class Robot extends IterativeRobot {
             evictor.evict();
         else 
             evictor.hold();
+      
+        if(im.getTurnRight()){
+        	if(!drive.turnToAngle.isEnabled()){
+        		drive.getGryo().reset();
+        		drive.turnToAngle.setSetpoint(60);
+        		drive.turnToAngle.enable();
+        	}
+        	drive.drive(im.getDrive(), im.getStrafe(), drive.turnToAngle.get(), im.getShift());
+        }
+        else {
+        	drive.turnToAngle.reset();
+        	drive.turnToAngle.disable();
+        }
         
         if(cameraOn){
         	if(im.getConfigCamera()) {
@@ -103,7 +116,14 @@ public class Robot extends IterativeRobot {
             }
             SmartDashboard.putString("Angles: ", Arrays.toString(angles));
             SmartDashboard.putString("Distances: ", Arrays.toString(distances));
-        }        
+        }      
+        
+        drive.getGryo().outputValues();
     }
-    @Override public void testPeriodic(){}
+    @Override public void testInit(){
+    	teleopInit();
+    }
+    @Override public void testPeriodic(){
+    	teleopPeriodic();
+    }
 }

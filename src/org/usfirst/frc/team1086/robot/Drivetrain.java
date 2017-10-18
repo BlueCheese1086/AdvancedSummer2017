@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 public class Drivetrain {
 	CANTalon leftFrontMecanum, rightFrontMecanum, leftRearMecanum, rightRearMecanum;
@@ -26,6 +27,10 @@ public class Drivetrain {
         rightRearMecanum.setInverted(true);
         rightRearColson.setInverted(true);
         trigger = new Solenoid(RobotMap.TRIGGER);
+        this.getTurnToAngleController();
+        this.getDriveStraightController();
+        this.getDriveToDistanceController();
+        g = Gyro.getGyro();
     }
     public void drive(double leftY, double leftX, double rightX, boolean trigger){
         this.trigger.set(!trigger);
@@ -57,30 +62,40 @@ public class Drivetrain {
         rightRearColson.set(leftY + rightX);
     }
     public PIDController getTurnToAngleController(){
-    	PIDController controller = new PIDController(0, 0, 0, new PIDInput(() -> {
+    	if(this.turnToAngle != null)
+    		return this.turnToAngle;
+    	PIDController controller = new PIDController(0.04, 0, 0.05, new PIDInput(() -> {
     		return g.getAngle();
     	}), o -> {});
     	controller.setInputRange(-180, 180);
     	controller.setOutputRange(-1, 1);
     	controller.setContinuous(true);
+    	this.turnToAngle = controller;
+    	LiveWindow.addActuator("Turn Controller", "PID", this.turnToAngle);
     	return controller;
     }
     public PIDController getDriveStraightController(){
+    	if(this.driveStraight != null)
+    		return this.driveStraight;
     	PIDController controller = new PIDController(0, 0, 0, new PIDInput(() -> {
     		return g.getAngle();
     	}), o -> {});
     	controller.setInputRange(-180, 180);
     	controller.setOutputRange(-1, 1);
     	controller.setContinuous(true);
+    	this.driveStraight = controller;
     	return controller;
     }
     public PIDController getDriveToDistanceController(){
+    	if(this.driveToDistance != null)
+    		return this.driveToDistance;
     	PIDController controller = new PIDController(0, 0, 0, new PIDInput(() -> {
     		return em.getDistance();
     	}), o -> {});
     	controller.setInputRange(-180, 180);
     	controller.setOutputRange(-1, 1);
     	controller.setContinuous(true);
+    	this.driveToDistance = controller;
     	return controller;
     }
     public Gyro getGryo(){

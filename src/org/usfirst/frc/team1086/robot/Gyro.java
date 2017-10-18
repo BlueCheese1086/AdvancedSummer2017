@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Gyro {
 	static enum GyroType {
@@ -33,6 +34,9 @@ public class Gyro {
 		} else {
 			return gyro.getAngle();
 		}
+	}
+	public void outputValues(){
+		SmartDashboard.putNumber("NavX Angle", getAngle());
 	}
 	public void reset() {
 		if(type == GyroType.NAVX) {
