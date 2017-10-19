@@ -41,14 +41,14 @@ public class Drivetrain {
         }
     }    
     public void mecanum(double leftY, double leftX, double rightX){
-        leftFrontMecanum.set(0.9 * (leftY - rightX - leftX));
-        leftFrontColson.set(0.9 * (leftY - rightX - leftX));
-        rightFrontMecanum.set(0.9 * (leftY + rightX + leftX));
-        rightFrontColson.set(0.9 * (leftY + rightX + leftX));
-        leftRearMecanum.set(0.9 * (leftY - rightX + leftX));
-        leftRearColson.set(0.9 * (leftY - rightX + leftX));
-        rightRearMecanum.set(0.9 * (leftY + rightX - leftX));
-        rightRearColson.set(0.9 * (leftY + rightX - leftX));
+        leftFrontMecanum.set((leftY - rightX - leftX));
+        leftFrontColson.set((leftY - rightX - leftX));
+        rightFrontMecanum.set((leftY + rightX + leftX));
+        rightFrontColson.set((leftY + rightX + leftX));
+        leftRearMecanum.set((leftY - rightX + leftX));
+        leftRearColson.set((leftY - rightX + leftX));
+        rightRearMecanum.set((leftY + rightX - leftX));
+        rightRearColson.set((leftY + rightX - leftX));
         
     }
     public void colson(double leftY, double rightX){
@@ -77,13 +77,14 @@ public class Drivetrain {
     public PIDController getDriveStraightController(){
     	if(this.driveStraight != null)
     		return this.driveStraight;
-    	PIDController controller = new PIDController(0, 0, 0, new PIDInput(() -> {
+    	PIDController controller = new PIDController(0.06, 0.0003, 0.07, new PIDInput(() -> {
     		return g.getAngle();
     	}), o -> {});
     	controller.setInputRange(-180, 180);
     	controller.setOutputRange(-1, 1);
     	controller.setContinuous(true);
     	this.driveStraight = controller;
+    	LiveWindow.addActuator("Drive Straight Controller", "PID", this.driveStraight);
     	return controller;
     }
     public PIDController getDriveToDistanceController(){
@@ -98,7 +99,7 @@ public class Drivetrain {
     	this.driveToDistance = controller;
     	return controller;
     }
-    public Gyro getGryo(){
+    public Gyro getGyro(){
     	return g;
     }
 }

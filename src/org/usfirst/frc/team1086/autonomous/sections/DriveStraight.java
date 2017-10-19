@@ -15,10 +15,11 @@ public class DriveStraight extends AutonomousSection {
 		this.forward = forward;
 	}
 	@Override public void start(){
+		super.start();
 		straightDriver = drive.getTurnToAngleController();
 		straightDriver.enable();
 		straightDriver.setSetpoint(0);
-		drive.getGryo().reset();
+		drive.getGyro().reset();
 	}
 	@Override public void update(){
 		drive.drive(forward, 0, straightDriver.get(), true);

@@ -18,6 +18,7 @@ public class LoganChaser extends AutonomousSection {
 		this.drivetrain = drivetrain;
 	}
 	@Override public void start(){
+		super.start();
 		drive.enable();
 		drive.setSetpoint(0);
 		strafe.enable();

@@ -29,11 +29,13 @@ public class Gyro {
 		return instance;
 	}
 	public double getAngle() {
+		double ang = 0;
 		if(type == GyroType.NAVX) {
-			return navX.getYaw();
+			ang = (navX.getYaw() % 360 + 360) % 360;
 		} else {
-			return gyro.getAngle();
+			ang = (gyro.getAngle() % 360 + 360) % 360;
 		}
+		return ang > 180 ? ang - 360 : ang;
 	}
 	public void outputValues(){
 		SmartDashboard.putNumber("NavX Angle", getAngle());
@@ -44,5 +46,6 @@ public class Gyro {
 		} else {
 			gyro.reset();
 		}
+		assert(Math.abs(getAngle()) < 1);
 	}
 }

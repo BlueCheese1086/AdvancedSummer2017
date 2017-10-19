@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.usfirst.frc.team1086.CameraCalculator.Sighting;
 import org.usfirst.frc.team1086.autonomous.AutonomousManager;
 import org.usfirst.frc.team1086.autonomous.sections.Drive;
+import org.usfirst.frc.team1086.autonomous.sections.DriveStraight;
 import org.usfirst.frc.team1086.autonomous.sections.LoganChaser;
 import org.usfirst.frc.team1086.autonomous.sections.ReleaseGear;
 import org.usfirst.frc.team1086.camera.Driver;
@@ -47,14 +48,16 @@ public class Robot extends IterativeRobot {
 	        cameraStrafe.enable();
 	        cameraDrive.enable();
         }
-        //defineAutonomousRoutines();
+        defineAutonomousRoutines();
     }
     public void defineAutonomousRoutines(){
+    	chooser = new SendableChooser<>();
     	middleGear = new AutonomousManager();
-    	middleGear.addSection(new Drive(200, drive, 0.7, 0, 0));
-    	middleGear.addSection(new LoganChaser(camera, drive));
+    	middleGear.addSection(new DriveStraight(700, drive, -0.7));
+    	middleGear.addSection(new DriveStraight(2000, drive, -0.4472));
     	middleGear.addSection(new ReleaseGear(evictor, drive));
     	chooser.addDefault("Middle Gear", middleGear);
+    	SmartDashboard.putData("Autonomous Chooser", chooser);
     }
     @Override public void autonomousInit(){
     	selectedRoutine = chooser.getSelected() == null ? middleGear : chooser.getSelected();
@@ -83,16 +86,29 @@ public class Robot extends IterativeRobot {
             evictor.hold();
       
         if(im.getTurnRight()){
-        	if(!drive.turnToAngle.isEnabled()){
-        		drive.getGryo().reset();
-        		drive.turnToAngle.setSetpoint(60);
-        		drive.turnToAngle.enable();
+        	if(!drive.getTurnToAngleController().isEnabled()){
+        		drive.getGyro().reset();
+        		drive.getTurnToAngleController().setSetpoint(60);
+        		drive.getTurnToAngleController().enable();
         	}
-        	drive.drive(im.getDrive(), im.getStrafe(), drive.turnToAngle.get(), im.getShift());
+        	drive.drive(im.getDrive(), im.getStrafe(), drive.getTurnToAngleController().get(), im.getShift());
         }
         else {
-        	drive.turnToAngle.reset();
-        	drive.turnToAngle.disable();
+        	drive.getTurnToAngleController().reset();
+        	drive.getTurnToAngleController().disable();
+        }
+        
+        if(im.getDriveStraight()){
+        	if(!drive.getDriveStraightController().isEnabled()){
+        		drive.getGyro().reset();
+        		drive.getDriveStraightController().enable();
+        		drive.getDriveStraightController().setSetpoint(0);
+        	}
+        	drive.drive(im.getDrive(), im.getStrafe(), drive.getDriveStraightController().get(), im.getShift());
+        }
+        else {
+        	drive.getDriveStraightController().reset();
+        	drive.getDriveStraightController().disable();
         }
         
         if(cameraOn){
@@ -117,8 +133,8 @@ public class Robot extends IterativeRobot {
             SmartDashboard.putString("Angles: ", Arrays.toString(angles));
             SmartDashboard.putString("Distances: ", Arrays.toString(distances));
         }      
-        
-        drive.getGryo().outputValues();
+        SmartDashboard.putNumber("Drive Straight setpoint", drive.getDriveStraightController().getSetpoint());
+        drive.getGyro().outputValues();
     }
     @Override public void testInit(){
     	teleopInit();

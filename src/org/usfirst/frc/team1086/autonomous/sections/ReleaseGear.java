@@ -12,11 +12,12 @@ public class ReleaseGear extends AutonomousSection {
 		this.drive = drive;
 	}
 	@Override public void start(){
+		super.start();
 		s.evict();
 	}
 	@Override public void update(){
-		if(System.currentTimeMillis() - startTime > 300){
-			drive.drive(-0.4, 0, 0, true);
+		if(System.currentTimeMillis() - startTime > 500){
+			drive.drive(0.4, 0, 0, true);
 			s.hold();
 		}
 		else {
