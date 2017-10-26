@@ -8,6 +8,7 @@ public class ReleaseGear extends AutonomousSection {
 	GearHolder s;
 	Drivetrain drive;
 	public ReleaseGear(GearHolder s, Drivetrain drive){
+		this.duration = 1300;
 		this.s = s;
 		this.drive = drive;
 	}
@@ -18,7 +19,7 @@ public class ReleaseGear extends AutonomousSection {
 	@Override public void update(){
 		if(System.currentTimeMillis() - startTime > 500){
 			drive.drive(0.4, 0, 0, true);
-			s.hold();
+			s.evict();
 		}
 		else {
 			s.evict();

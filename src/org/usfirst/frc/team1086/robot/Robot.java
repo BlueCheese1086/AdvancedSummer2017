@@ -28,7 +28,7 @@ public class Robot extends IterativeRobot {
     Driver camera;
     PIDController cameraTurn, cameraStrafe, cameraDrive;
     SendableChooser<AutonomousManager> chooser;
-    AutonomousManager middleGear;
+    AutonomousManager middleGear, driveForward;
     AutonomousManager selectedRoutine = null;
     boolean cameraOn = false; //Turn this to true/remove it when camera is on robot.
     @Override public void robotInit(){
@@ -53,10 +53,16 @@ public class Robot extends IterativeRobot {
     public void defineAutonomousRoutines(){
     	chooser = new SendableChooser<>();
     	middleGear = new AutonomousManager();
-    	middleGear.addSection(new DriveStraight(700, drive, -0.7));
+    	middleGear.addSection(new DriveStraight(1800, drive, -0.7));
     	middleGear.addSection(new DriveStraight(2000, drive, -0.4472));
     	middleGear.addSection(new ReleaseGear(evictor, drive));
+    	
+    	driveForward = new AutonomousManager();
+    	driveForward.addSection(new DriveStraight(5000, drive, -0.7));
+    	driveForward.addSection(new Drive(100, drive, 0, 0, 0));
+
     	chooser.addDefault("Middle Gear", middleGear);
+    	chooser.addObject("Drive Forward", driveForward);
     	SmartDashboard.putData("Autonomous Chooser", chooser);
     }
     @Override public void autonomousInit(){
