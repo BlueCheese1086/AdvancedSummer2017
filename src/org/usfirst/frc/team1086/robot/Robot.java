@@ -61,12 +61,12 @@ public class Robot extends IterativeRobot {
     	driveForward.addSection(new DriveStraight(5000, drive, -0.7));
     	driveForward.addSection(new Drive(100, drive, 0, 0, 0));
 
-    	chooser.addDefault("Middle Gear", middleGear);
-    	chooser.addObject("Drive Forward", driveForward);
+    	//chooser.addDefault("Middle Gear", middleGear);
+    	chooser.addDefault("Drive Forward", driveForward);
     	SmartDashboard.putData("Autonomous Chooser", chooser);
     }
     @Override public void autonomousInit(){
-    	selectedRoutine = chooser.getSelected() == null ? middleGear : chooser.getSelected();
+    	selectedRoutine = chooser.getSelected() == null ? driveForward : chooser.getSelected();
     	selectedRoutine.start();
     }
     @Override public void autonomousPeriodic(){
