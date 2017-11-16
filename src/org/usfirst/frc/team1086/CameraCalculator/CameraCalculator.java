@@ -66,7 +66,7 @@ public class CameraCalculator {
             double horizontalAngle = Math.PI / 2 - getXAngle(midX) - camera.hAngle;
             double distance = p.distance.getAsDouble();
             double f = Math.sqrt(distance * distance + Math.pow(camera.horizontalOffset, 2) - 2 * distance * camera.horizontalOffset * Math.cos(horizontalAngle));
-            double c = Math.asin(camera.horizontalOffset * Math.sin(horizontalAngle) / f);
+            double c = Math.asin(Math.abs(camera.horizontalOffset) * Math.sin(horizontalAngle) / f);
             double b = Math.PI - horizontalAngle - c;
             p.angle = OptionalDouble.of((Math.PI / 2 - b));
         }

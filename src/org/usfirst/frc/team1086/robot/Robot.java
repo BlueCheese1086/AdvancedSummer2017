@@ -30,7 +30,7 @@ public class Robot extends IterativeRobot {
     SendableChooser<AutonomousManager> chooser;
     AutonomousManager middleGear, driveForward;
     AutonomousManager selectedRoutine = null;
-    boolean cameraOn = false; //Turn this to true/remove it when camera is on robot.
+    boolean cameraOn = true; //Turn this to true/remove it when camera is on robot.
     @Override public void robotInit(){
     	im = new InputManager();
         drive = new Drivetrain();

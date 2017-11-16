@@ -21,11 +21,11 @@ public class Driver {
     public static final double GEAR_CAMERA_VFOV = 67 * Math.PI /  180.0;
     public static final double GEAR_CAMERA_HEIGHT = 240;
     public static final double GEAR_CAMERA_WIDTH = 320;
-    public static final double GEAR_CAMERA_HOFFSET = 11.65;
+    public static final double GEAR_CAMERA_HOFFSET = 10.7;
     public static final double GEAR_CAMERA_VOFFSET = 6.5;
     public static final double GEAR_CAMERA_DOFFSET = 0;
-    public static double GEAR_CAMERA_XANGLE = 1.47887575993748 * Math.PI / 180;
-    public static double GEAR_CAMERA_YANGLE = 10.15837384910151 * Math.PI / 180;
+    public static double GEAR_CAMERA_XANGLE = 0 * Math.PI / 180;
+    public static double GEAR_CAMERA_YANGLE = 9.517202820166553 * Math.PI / 180;
     public static final double turnP = 0;
     public static final double turnI = 0;
     public static final double turnD = 0;
