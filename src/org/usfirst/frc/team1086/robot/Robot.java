@@ -7,7 +7,6 @@ import org.usfirst.frc.team1086.CameraCalculator.Sighting;
 import org.usfirst.frc.team1086.autonomous.AutonomousManager;
 import org.usfirst.frc.team1086.autonomous.sections.Drive;
 import org.usfirst.frc.team1086.autonomous.sections.DriveStraight;
-import org.usfirst.frc.team1086.autonomous.sections.LoganChaser;
 import org.usfirst.frc.team1086.autonomous.sections.ReleaseGear;
 import org.usfirst.frc.team1086.camera.Driver;
 import org.usfirst.frc.team1086.subsystems.Climber;
@@ -130,6 +129,9 @@ public class Robot extends IterativeRobot {
             	}
             }
         	if(im.getGearDrive()) {
+        		SmartDashboard.putNumber("Camera Driver Drive: ", cameraDrive.get());
+        		SmartDashboard.putNumber("Camera Driver Strafe: ", cameraStrafe.get());
+        		SmartDashboard.putNumber("Camera Driver Turn: ", cameraTurn.get());
         		drive.drive(cameraDrive.get(), cameraStrafe.get(), cameraTurn.get(), im.getShift());
         	}
             ArrayList<Sighting> sightings = camera.getCamera().getSightings(camera.gear);

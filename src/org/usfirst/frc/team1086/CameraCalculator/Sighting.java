@@ -52,7 +52,7 @@ public class Sighting {
         centerX = x + width / 2;
         centerY = y + height / 2;
         area += sighting.area;
-        solidity = area / width * height;
+        solidity = area / width / height;
         aspectRatio = width / height;
         rawH = rawV = rotation = distance = angle = OptionalDouble.empty();
     }

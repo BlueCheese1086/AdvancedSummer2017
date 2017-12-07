@@ -24,8 +24,8 @@ public class Driver {
     public static final double GEAR_CAMERA_HOFFSET = 10.7;
     public static final double GEAR_CAMERA_VOFFSET = 6.5;
     public static final double GEAR_CAMERA_DOFFSET = 0;
-    public static double GEAR_CAMERA_XANGLE = 0 * Math.PI / 180;
-    public static double GEAR_CAMERA_YANGLE = 9.517202820166553 * Math.PI / 180;
+    public static double GEAR_CAMERA_XANGLE = -2.8252540073770693 * Math.PI / 180;
+    public static double GEAR_CAMERA_YANGLE = 10.200401055379588 * Math.PI / 180;
     public static final double turnP = 0;
     public static final double turnI = 0;
     public static final double turnD = 0;
