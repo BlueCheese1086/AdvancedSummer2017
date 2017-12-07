@@ -63,12 +63,16 @@ public class CameraCalculator {
             double midX = p.centerX;
             p.rawH = OptionalDouble.of(getXAngle(midX));
             p.adjustedHAngle = OptionalDouble.of(getXAngle(midX) + camera.hAngle);
-            double horizontalAngle = Math.PI / 2 - getXAngle(midX) - camera.hAngle;
+            double horizontalAngle = Math.PI / 2 + getXAngle(midX) + camera.hAngle;
             double distance = p.distance.getAsDouble();
             double f = Math.sqrt(distance * distance + Math.pow(camera.horizontalOffset, 2) - 2 * distance * camera.horizontalOffset * Math.cos(horizontalAngle));
-            double c = Math.asin(Math.abs(camera.horizontalOffset) * Math.sin(horizontalAngle) / f);
+            double c = Math.asin(camera.horizontalOffset * Math.sin(horizontalAngle) / f);
             double b = Math.PI - horizontalAngle - c;
             p.angle = OptionalDouble.of((Math.PI / 2 - b));
+            System.out.println("Center X:      " + midX);
+            System.out.println("RawH:          " + p.rawH.getAsDouble() * 180.0 / Math.PI);
+            System.out.println("Adjusted Ange: " + p.adjustedHAngle.getAsDouble() * 180.0 / Math.PI);
+            System.out.println("Angle:          " + p.angle.getAsDouble() * 180.0 / Math.PI);
         }
     }
     

@@ -143,7 +143,7 @@ public class Camera {
 }
 class CameraConfig {
     public static double getXAngle(double rawA, double dis, double cameraOffset){
-    	return Math.acos(cameraOffset / dis) - rawA;
+    	return (Math.acos(cameraOffset / dis) - rawA) - Math.PI / 2;
     }
     public static double getYAngle(double rawA, double dHeight, double dis){
         return Math.atan2(dHeight, dis) - rawA;

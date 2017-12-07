@@ -41,9 +41,9 @@ public class Robot extends IterativeRobot {
         if(cameraOn){
 	        camera = new Driver();
 	        camera.initialize();
-	        cameraTurn = camera.getTurnController(0.3, 0, 0);
+	        cameraTurn = camera.getTurnController(0.03, 0, 0);
 	        cameraStrafe = camera.getStrafeController(0, 0, 0);
-	        cameraDrive = camera.getDriveController(0.4, 0, 0);
+	        cameraDrive = camera.getDriveController(0.0, 0, 0);
 	        cameraTurn.enable();
 	        cameraStrafe.enable();
 	        cameraDrive.enable();
@@ -123,10 +123,15 @@ public class Robot extends IterativeRobot {
     	        	camera.getCamera().configure(camera.gear, 52);
     	        	System.out.println("X: " + (camera.getCamera().hAngle * 180.0 / Math.PI));
     	        	System.out.println("Y: " + (camera.getCamera().vAngle * 180.0 / Math.PI));
+    	        	SmartDashboard.putNumber("X Config", (camera.getCamera().hAngle * 180.0 / Math.PI));
+    	        	SmartDashboard.putNumber("Y Config", (camera.getCamera().vAngle * 180.0 / Math.PI));
             	} catch (Exception e) {
             		e.printStackTrace();
             	}
             }
+        	if(im.getGearDrive()) {
+        		drive.drive(cameraDrive.get(), cameraStrafe.get(), cameraTurn.get(), im.getShift());
+        	}
             ArrayList<Sighting> sightings = camera.getCamera().getSightings(camera.gear);
             SmartDashboard.putNumber("Number of sightings", sightings.size());
             double[] angles = new double[sightings.size()];
