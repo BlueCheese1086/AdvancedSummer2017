@@ -40,8 +40,8 @@ public class Robot extends IterativeRobot {
         if(cameraOn){
 	        camera = new Driver();
 	        camera.initialize();
-	        cameraTurn = camera.getTurnController(0.03, 0, 0);
-	        cameraStrafe = camera.getStrafeController(0, 0, 0);
+	        cameraTurn = camera.getTurnController(0.06, 0.001, 0.11);
+	        cameraStrafe = camera.getStrafeController(0.0, 0, 0);
 	        cameraDrive = camera.getDriveController(0.0, 0, 0);
 	        cameraTurn.enable();
 	        cameraStrafe.enable();
@@ -128,11 +128,16 @@ public class Robot extends IterativeRobot {
             		e.printStackTrace();
             	}
             }
-        	if(im.getGearDrive()) {
-        		SmartDashboard.putNumber("Camera Driver Drive: ", cameraDrive.get());
-        		SmartDashboard.putNumber("Camera Driver Strafe: ", cameraStrafe.get());
-        		SmartDashboard.putNumber("Camera Driver Turn: ", cameraTurn.get());
+        	SmartDashboard.putNumber("Camera Driver Drive: ", cameraDrive.get());
+    		SmartDashboard.putNumber("Camera Driver Strafe: ", cameraStrafe.get());
+    		SmartDashboard.putNumber("Camera Driver Turn: ", cameraTurn.get());
+        	if(im.getGearDrive()) {   
+        		cameraTurn.enable();
         		drive.drive(cameraDrive.get(), cameraStrafe.get(), cameraTurn.get(), im.getShift());
+        	}
+        	else {
+        		cameraTurn.disable();
+        		cameraTurn.reset();
         	}
             ArrayList<Sighting> sightings = camera.getCamera().getSightings(camera.gear);
             SmartDashboard.putNumber("Number of sightings", sightings.size());

@@ -31,10 +31,10 @@ public class CameraCalculator {
         calculateAngle();
         calculateRotation();
         eliminateBadTargets();
-        System.out.println("New calculation!");
-        for(Sighting s : visionObjects){
-        	System.out.println(s.getValues());
-        }
+        //System.out.println("New calculation!");
+        //for(Sighting s : visionObjects){
+        	//System.out.println(s.getValues());
+        //}
         validSightings = new ArrayList<>(visionObjects);
     }
     

@@ -62,16 +62,17 @@ public class Driver {
                             .findFirst();
                 	if(o.isPresent()) {
                 		OptionalDouble od = o.get().angle;
-	                	if(od.isPresent())
-	                		return od.getAsDouble() / 30;
+	                	if(od.isPresent()) {
+	                		return od.getAsDouble() * 180 / Math.PI;
+	                	}
                 	}
                 	return 0;
                 }
             }, a -> {});
-            turnController.setAbsoluteTolerance(1);
+            turnController.setAbsoluteTolerance(0.1);
             turnController.setSetpoint(0);
-            turnController.setInputRange(-1, 1);
-            turnController.setOutputRange(-1, 1);
+            turnController.setInputRange(-180, 180);
+            turnController.setOutputRange(-.6, .6);
         } else {
             turnController.setPID(p, i, d);
         }
@@ -104,6 +105,7 @@ public class Driver {
 	                	if(od.isPresent())
 	                		return od.getAsDouble();
                 	}
+                
                 	return 0;
                 }
             }, a -> {});
@@ -114,7 +116,7 @@ public class Driver {
         } else {
             driveController.setPID(p, i, d);
         }
-        return turnController;
+        return driveController;
     }
     public PIDController getDriveController(){
     	return getDriveController(driveP, driveI, driveD);
@@ -128,8 +130,8 @@ public class Driver {
      * @return the PIDController
      */
     public PIDController getStrafeController(double p, double i, double d){
-        if(driveController == null){
-            driveController = new PIDController(p, i, d, new PIDSource() {
+        if(strafeController == null){
+        	strafeController = new PIDController(p, i, d, new PIDSource() {
                 @Override public void setPIDSourceType(PIDSourceType pidst){}
                 @Override public PIDSourceType getPIDSourceType(){
                     return PIDSourceType.kDisplacement;
@@ -145,14 +147,14 @@ public class Driver {
                 	return 0;
                 }
             }, a -> {});
-            driveController.setAbsoluteTolerance(1);
-            driveController.setSetpoint(0);
-            driveController.setInputRange(-1, 1);
-            driveController.setOutputRange(-1, 1);
+        	strafeController.setAbsoluteTolerance(1);
+        	strafeController.setSetpoint(0);
+        	strafeController.setInputRange(-1, 1);
+        	strafeController.setOutputRange(-1, 1);
         } else {
-            driveController.setPID(p, i, d);
+        	strafeController.setPID(p, i, d);
         }
-        return turnController;
+        return strafeController;
     }
     public PIDController getStrafeController(){
     	return getStrafeController(strafeP, strafeI, strafeD);
