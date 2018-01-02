@@ -119,7 +119,7 @@ public class Camera {
                 while (!interrupted()) {
                 	if(sink.grabFrame(sourceMat) != 0)
                 		process(sourceMat);
-                    sleep(50);
+                    sleep(30);
                     System.gc();
                 }
             } catch (Exception e) {

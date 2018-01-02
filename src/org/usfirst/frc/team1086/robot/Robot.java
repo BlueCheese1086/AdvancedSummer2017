@@ -143,13 +143,16 @@ public class Robot extends IterativeRobot {
             SmartDashboard.putNumber("Number of sightings", sightings.size());
             double[] angles = new double[sightings.size()];
             double[] distances = new double[sightings.size()];
+            double[] translationalDis = new double[sightings.size()];
             int ind = 0;
             for(Sighting s : sightings) {
             	angles[ind] = s.angle.getAsDouble() * 180.0 / Math.PI;
+            	translationalDis[ind] = s.rotation.getAsDouble();
             	distances[ind++] = s.distance.getAsDouble();
             }
             SmartDashboard.putString("Angles: ", Arrays.toString(angles));
             SmartDashboard.putString("Distances: ", Arrays.toString(distances));
+            SmartDashboard.putString("Translational Distances: ", Arrays.toString(translationalDis));
         }      
         SmartDashboard.putNumber("Drive Straight setpoint", drive.getDriveStraightController().getSetpoint());
         drive.getGyro().outputValues();
